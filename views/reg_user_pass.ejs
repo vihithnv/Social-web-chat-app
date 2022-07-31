@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Login</title>
+        <link rel="stylesheet" href="css/login_styles/login_styl.css" type="text/css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Edu+VIC+WA+NT+Beginner:wght@600&display=swap" rel="stylesheet">
+    
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+
+
+    </head>
+    <body>
+        <form action="/reg_user_name_pass" method="post">
+            <div class="container">
+                <div class="name">Social</div>
+                <div><input name="user_name" type="text" value=<%=usn%>  style="display:none;" /></div>
+                <div><input type="text" value=<%=usn%>  disabled class="inp" /></div>
+                <div><input name="password" type="password" placeholder="Enter your Password" required class="inp" /></div>
+                <div><input type="submit" value="Submit" id="s_btn"/></div>
+            </div>
+        </form>
+    </body>
+</html>

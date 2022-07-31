@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Main Page</title>
+        <link rel="stylesheet" href="css/chats_styl/main_pg_style.css" type="text/css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="search_main" id="search_main_">
+            <div class="search_main_container">
+                <div class="search_inp">
+                    <div><button id="search_close_btn">Close</button></div>
+                    <div><input type="text" placeholder="search name" class="main_search_inp" id="search_person"/></div>
+                    <div><img src="icons/side_bar/Search.svg" class="opt_bar_icon" id="search_person_btn"/></div>
+                </div>
+                <div class="search_result">
+                    <div class="match_tiles_container" id="rslts_cont">
+                        <!-- <div class="search_tile">
+                            <div class="img_name">
+                                <div><img width="40px" height="40px" src="img1.jpg" style="border-radius: 50%;" /></div> 
+                                <div style="font-weight: 900;">Jane</div>
+                            </div>
+                            <div><button id="add_btn">Add</button></div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p style="display:none;" id="send" value=<%=send%>></p>
+        <p style="display:none;" id="recv" value=<%=recv%>></p>
+        <div class="level_1">
+            <div class="l_1_container">
+                <div class="app_name">Social</div>
+                <div class="nav_bar">
+                    <div class="nav_bar_element">Chats</div>
+                    <div class="nav_bar_element">Statements</div>
+                    <div class="nav_bar_element">Explore</div>
+                </div>
+            </div>
+        </div>
+        <div class="level_2">
+            <div class="option_bar">
+                <div class="top_opt_bar">
+                    <div><img src="icons/side_bar/Profile.svg" class="opt_bar_icon" /></div>
+                    <div><img src="icons/side_bar/Search.svg" class="opt_bar_icon" id="search_open"/></div>
+                    <div><img src="icons/side_bar/3-User.svg" class="opt_bar_icon" /></div>
+                </div>
+                <div class="bottom_opt_bar">
+                    <div><img src="icons/side_bar/Logout.svg" class="opt_bar_icon" /></div>
+                </div>
+            </div>
+            <div class="chats_container">
+                <div class="recents_container">
+                    <div class="r_name">Contacts</div>
+                    <div>
+                        <input type="text" id="search_key" placeholder="Type persons name"/>
+                    </div>
+                    <div class="fre_container" id="contc_cont">
+                        <% for(let i=0; i<people.length; i++) { %>
+                            <div class="tile" id= <%=people[i]%>>
+                                <!-- <img src="img1.jpg" class="tile_img" alt="img"/> -->
+                                <div style="margin-left: 10px;"><%=people[i]%></div>
+                            </div>
+                        <% } %>  
+                    </div>
+                </div>
+                <div class="chat_prof_container">
+                    <div class="prof_ ext">
+                        <!-- <img src="img1.jpg" class="tile_img " /> -->
+                        <div class="prof_name"><%= selected_user %></div>
+                    </div>
+                    <div class="chat_message_container" id="chats_cont">
+                        <% for(let i=0; i<messages.length; i++) { %>
+                            <% if(messages[i].From=== selected_user){ %>
+                                <div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;"><%=messages[i].time%></span><br><%=messages[i].text_message%></div></div>
+                            <% } else{ %>   
+                                <div style="text-align: right;"><div class="chat_recv"><span style="font-size: x-small;"><%=messages[i].time%></span><br><%=messages[i].text_message%></div></div>
+                            <% } %>
+                        <% } %>               
+                        
+                    </div>
+                    <div class="send_box">
+                        <div><input type="text" class="message_val" placeholder="Type your message" id="chat_text"/></div>
+                        <div><img src="icons/chats_icon/akar-icons_send.svg" class="send_icon" id="send_chat_"/></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="javascript/chats_message/chat_js.js" type="text/javascript"></script>
+    </body>
+</html>
