@@ -266,9 +266,12 @@ app.get("/chats",async (req,resp)=>{
 
 app.post("/chat_receive",async (req,resp)=>{
     let mess_recv=req.body;
-    let dt=new Date();
-    let hrs = dt.getHours();
-    let min = dt.getMinutes();
+    let currentTime = new Date();
+    let currentOffset = currentTime.getTimezoneOffset();
+    let ISTOffset = 330;  
+    let ISTTime = new Date(currentTime.getTime() + (ISTOffset + currentOffset)*60000);
+    let hrs = ISTTime.getHours();
+    let min = ISTTime.getMinutes();
     let a_p = hrs >= 12 ? 'pm' : 'am';
     hrs = hrs % 12;
     hrs = hrs ? hrs : 12; 
