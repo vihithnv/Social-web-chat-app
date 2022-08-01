@@ -3,7 +3,7 @@ function post_chat_server(){
     let send=document.getElementById("send").getAttribute("value");
     let recv=document.getElementById("recv").getAttribute("value");
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:3000/chat_receive");
+    xhr.open("POST", "https://social-new-ind.herokuapp.com/chat_receive");
     xhr.onload = function() {
         let resp=xhr.response;
         let arr=resp.split("time=");
@@ -40,7 +40,7 @@ function get_new_mesages(){
     let send=document.getElementById("send").getAttribute("value");
     let recv=document.getElementById("recv").getAttribute("value");
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:3000/buff_messages");
+    xhr.open("POST", "https://social-new-ind.herokuapp.com/buff_messages");
     xhr.onload = function() {
         if(xhr.response!=="no-data"){
             let arr1=xhr.response.split("<brk>");
@@ -58,7 +58,7 @@ function get_new_mesages(){
 
 function add_user_to_list(usn){
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://localhost:3000/add_friend?"+"send="+document.getElementById("send").getAttribute("value")+"&user="+usn);
+    xhr.open("GET", "https://social-new-ind.herokuapp.com/add_friend?"+"send="+document.getElementById("send").getAttribute("value")+"&user="+usn);
     xhr.onload = function() {
         if(xhr.response==="added-user"){
             document.getElementById("s_rslts_tile_add_"+usn).classList.add("added_srch_user");
@@ -91,7 +91,7 @@ function get_search_user(){
     document.getElementById("rslts_cont").innerHTML="";
     let xhr = new XMLHttpRequest();
     let pattern=document.getElementById("search_person").value;
-    xhr.open("GET", "http://localhost:3000/search_user?send="+document.getElementById("send").getAttribute("value")+"&person="+pattern);
+    xhr.open("GET", "https://social-new-ind.herokuapp.com/search_user?send="+document.getElementById("send").getAttribute("value")+"&person="+pattern);
     xhr.onload = function() {
         if(xhr.response!=="no-data"){
             let arr=xhr.response.split("<brk>");
@@ -125,7 +125,7 @@ function add_conts_events(){
     }
     for(let i=0;i<tls.length;i++){
         tls[i].addEventListener("click",()=>{
-            window.location="http://localhost:3000/chats?send="+sender+"&recv="+tls[i].id;
+            window.location="https://social-new-ind.herokuapp.com/chats?send="+sender+"&recv="+tls[i].id;
         },false);
     }
     get_new_mesages();
