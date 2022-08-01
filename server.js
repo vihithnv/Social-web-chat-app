@@ -277,7 +277,7 @@ app.post("/chat_receive",async (req,resp)=>{
     hrs = hrs ? hrs : 12; 
     min= min< 10 ? '0'+min : min;
     let dt_val=hrs+"."+min+" "+a_p;
-    let dt_act=""+dt.getTime();
+    let dt_act=""+ISTTime.getTime();
     let mess_1=new buff_model(
         {
             To: mess_recv.to,
