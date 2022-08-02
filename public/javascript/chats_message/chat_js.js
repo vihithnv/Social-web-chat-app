@@ -71,6 +71,7 @@ function add_user_to_list(usn){
 
 function ren_srch_user_rslts(arr){
     let cont=document.getElementById("rslts_cont");
+    cont.innerHTML="";
     for(let i=0;i<arr.length;i++){
         let new_tile=document.createElement("div");
         new_tile.classList.add("search_tile");
@@ -88,7 +89,6 @@ function ren_srch_user_rslts(arr){
 document.getElementById("search_person_btn").addEventListener("click",get_search_user,false);
 document.getElementById("search_person").addEventListener("keydown",get_search_user,false);
 function get_search_user(){
-    document.getElementById("rslts_cont").innerHTML="";
     let xhr = new XMLHttpRequest();
     let pattern=document.getElementById("search_person").value;
     xhr.open("GET", "https://social-new-ind.herokuapp.com/search_user?send="+document.getElementById("send").getAttribute("value")+"&person="+pattern);
