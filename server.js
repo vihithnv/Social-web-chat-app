@@ -240,6 +240,7 @@ app.get("/chats",async (req,resp)=>{
     let val1=await Contact.find({user_name:req.query.send});
     if(val.length!==0){
         val[0].chats.sort(GetSortOrder("date_act"));
+        console.log(val[0].chats);
         if(val1.length!==0){
             resp.render("chat_ejs.ejs",{ people:val1[0].user_contacts,selected_user:req.query.recv,messages:val[0].chats,send:req.query.send,recv:req.query.recv});
         }
