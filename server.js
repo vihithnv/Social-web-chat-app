@@ -156,46 +156,35 @@ const chat_model=mongoose.model("chat_boxe",chat_message_schema);
 app.post("/buff_messages",async (req,resp)=>{
     let mess_recv=req.body;
     if(req.body.send!=="none"&&req.body.recv!=="none"){
-        let buff_=await buff_model.find(
-            { $and: [{To: mess_recv.send}, {From: mess_recv.recv}] }
-    );
-    if(buff_.length!==0){
-        let val=await chat_model.find({$or: [
-            { $and: [{person_1: mess_recv.send}, {person_2: mess_recv.recv}] },
-            { $and: [{person_1: mess_recv.recv}, {person_2: mess_recv.send}] }
+        let messages_fnd=await messages_act_model.find({$or: [
+            { $and: [{person1: mess_recv.send}, {person2: mess_recv.recv}] },
+            { $and: [{person1: mess_recv.recv}, {person2: mess_recv.send}] }
         ]});
-        if(val.length!==0){
-            for(let i=0;i<buff_.length;i++){
-                val[0].chats_box.push(buff_[i]); 
+        if(messages_fnd.length!==0){
+            let arr=[];
+            for(let i=0;i<messages_fnd[0].chats.length;i++){
+                let temp_m=messages_fnd[0].chats[i];
+                if(temp_m.To===mess_recv.send&&temp_m.to_seen===0){
+                    arr.push(temp_m);
+                    messages_fnd[0].chats[i].to_seen=1;
+                }
             }
-            val[0].save();
+            if(arr.length!==0){
+                let send_string="";
+                for(let s=0;s<arr.length-1;s++){
+                    send_string+=JSON.stringify(arr[i])+"<brk>";
+                }
+                send_string+=JSON.stringify(arr[arr.length-1]);
+                messages_fnd[0].save();
+                resp.send(send_string);
+            }
+            else{
+                resp.send("no-data");
+            }
         }
         else{
-            let message_1=new chat_model({
-            person_1:mess_recv.send,
-            person_2:mess_recv.recv,
-            chats_box : []
+            resp.send("no-data");
         }
-        );
-        for(let i=0;i<buff_.length;i++){
-            message_1.chats_box.push(buff_[i]);
-        }
-        message_1.save();
-    }
-    let send_string="";
-    for(let i=0;i<buff_.length-1;i++){
-        send_string+=JSON.stringify(buff_[i])+"<brk>";
-    }
-    send_string+=JSON.stringify(buff_[buff_.length-1]);
-    await buff_model.deleteMany({$or: [
-        { $and: [{To: mess_recv.send}, {From: mess_recv.recv}] },
-        { $and: [{To: mess_recv.recv}, {From: mess_recv.send}] }
-    ]});
-       resp.send(send_string);
-    }
-    else{
-        resp.send("no-data");
-    }
     }
     else{
         resp.send("no-data");
@@ -240,6 +229,13 @@ app.get("/chats",async (req,resp)=>{
     let val1=await Contact.find({user_name:req.query.send});
     if(val.length!==0){
         val[0].chats.sort(GetSortOrder("date_act"));
+        for(let up=0;up<val[0].chats.length;up++){
+            if(val[0].chats[up].To===req.query.send&&val[0].chats[up].to_seen===0){
+                console.log(req.query.send+" "+val[0].chats[up].To);
+                val[0].chats[up].to_seen=1;
+            }
+        }
+        val[0].save();
         if(val1.length!==0){
             resp.render("chat_ejs.ejs",{ people:val1[0].user_contacts,selected_user:req.query.recv,messages:val[0].chats,send:req.query.send,recv:req.query.recv});
         }
@@ -278,13 +274,13 @@ app.post("/chat_receive",async (req,resp)=>{
     min= min< 10 ? '0'+min : min;
     let dt_val=hrs+"."+min+" "+a_p;
     let chat= await messages_act_model.find({$or: [
-        { $and: [{person1: req.query.send}, {person2: req.query.recv}] },
-        { $and: [{person1: req.query.recv}, {person2: req.query.send}] }
+        { $and: [{person1: mess_recv.from}, {person2: mess_recv.to}] },
+        { $and: [{person1: mess_recv.to}, {person2: mess_recv.from}] }
     ]});
     if(chat.length===0){
         let mess_1=new messages_act_model({
-            person1: req.query.send,
-            person2: req.query.recv,
+            person1: mess_recv.from,
+            person2: mess_recv.to,
             chats:[{
                 To: mess_recv.to,
                 From: mess_recv.from,
