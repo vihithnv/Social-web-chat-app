@@ -224,27 +224,27 @@ const Contact=mongoose.model("friends_list",freind_lst_schema);
 
 function GetSortOrder(prop) {    
     return function(a, b) {    
-        if (parseInt(a[prop]) >parseInt(b[prop])) {    
+        if (a[prop].getTime() > b[prop].getTime()) {    
             return 1;    
-        } else if (parseInt(a[prop]) < parseInt(b[prop])) {    
+        } else if (a[prop].getTime() < b[prop].getTime()) {    
             return -1;    
         }    
         return 0;    
     }    
 } 
 app.get("/chats",async (req,resp)=>{
-    let val=await chat_model.find({$or: [
-        { $and: [{person_1: req.query.send}, {person_2: req.query.recv}] },
-        { $and: [{person_1: req.query.recv}, {person_2: req.query.send}] }
+    let val= await messages_act_model.find({$or: [
+        { $and: [{person1: req.query.send}, {person2: req.query.recv}] },
+        { $and: [{person1: req.query.recv}, {person2: req.query.send}] }
     ]});
     let val1=await Contact.find({user_name:req.query.send});
-    val.sort(GetSortOrder("date_act"));
+    val[0].chats.sort(GetSortOrder("date_act"));
     if(val.length!==0){
         if(val1.length!==0){
-            resp.render("chat_ejs.ejs",{ people:val1[0].user_contacts,selected_user:req.query.recv,messages:val[0].chats_box,send:req.query.send,recv:req.query.recv});
+            resp.render("chat_ejs.ejs",{ people:val1[0].user_contacts,selected_user:req.query.recv,messages:val[0].chats,send:req.query.send,recv:req.query.recv});
         }
         else{
-            resp.render("chat_ejs.ejs",{ people:[],selected_user:req.query.recv,messages:val[0].chats_box,send:req.query.send,recv:req.query.recv});
+            resp.render("chat_ejs.ejs",{ people:[],selected_user:req.query.recv,messages:val[0].chats,send:req.query.send,recv:req.query.recv});
         }
     }
     else{
@@ -277,17 +277,37 @@ app.post("/chat_receive",async (req,resp)=>{
     hrs = hrs ? hrs : 12; 
     min= min< 10 ? '0'+min : min;
     let dt_val=hrs+"."+min+" "+a_p;
-    let dt_act=""+ISTTime.getTime();
-    let mess_1=new buff_model(
-        {
+    let chat= await messages_act_model.find({$or: [
+        { $and: [{person1: req.query.send}, {person2: req.query.recv}] },
+        { $and: [{person1: req.query.recv}, {person2: req.query.send}] }
+    ]});
+    if(chat.length===0){
+        let mess_1=new messages_act_model({
+            person1: req.query.send,
+            person2: req.query.recv,
+            chats:[{
+                To: mess_recv.to,
+                From: mess_recv.from,
+                text_message: mess_recv.text,
+                date_act: ISTTime,
+                time: dt_val,
+                to_seen: 0
+            }]
+        });
+        mess_1.save();
+    }
+    else{
+        let mess_got={
             To: mess_recv.to,
             From: mess_recv.from,
             text_message: mess_recv.text,
-            date_act: dt_act,
-            time: dt_val
+            date_act: ISTTime,
+            time: dt_val,
+            to_seen: 0
         }
-    );
-    mess_1.save();
+        chat[0].chats.push(mess_got);
+        chat[0].save();
+    }
     resp.send("status='got_it'&time="+dt_val);
 });
 
@@ -332,3 +352,22 @@ app.post("/login",async function(req,resp,next){
         }
     }
 });
+
+
+
+const messages_act=new mongoose.Schema(
+    {
+        person1: String,
+        person2: String,
+        chats:[{
+            To: String,
+            From: String,
+            text_message: String,
+            date_act: Date,
+            time: String,
+            to_seen: Number
+        }]
+    }
+);
+const messages_act_model=mongoose.model("new_chats_container",messages_act);
+
