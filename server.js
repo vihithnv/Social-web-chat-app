@@ -3,8 +3,21 @@ const app=express();
 const body_parse=require("body-parser");
 const mongoose=require("mongoose");
 const { response } = require("express");
+const cookie_parser = require('cookie-parser');
+const { resolveInclude } = require("ejs");
 mongoose.connect("mongodb+srv://vihith_mongodb:"+"Cse3002"+"%40"+"iwp2022"+"@cluster0.u8fjk.mongodb.net/Social_db",{ useNewUrlParser: true});
 // app.use('view engine',"ejs");
+app.use(cookie_parser());
+
+app.get("/cookie",(req,resp)=>{
+    resp.cookie("auth","y");
+    resp.cookie("auth","n");
+    resp.send("cookie added");   
+});
+
+app.get("/disp_cookie",(req,resp)=>{
+    console.log(req.cookies);
+});
 const port=process.env.PORT || 3000;
 app.listen(port);
 app.use(express.static(__dirname+"/public"));
@@ -14,8 +27,21 @@ app.get("/",(req,resp)=>{
     resp.redirect("/login");
 })
 app.get("/login",(req,resp)=>{
-    resp.sendFile(__dirname+"/html_files/login.html");
+    let cookie_got=req.cookies;
+    if(cookie_got.auth==="y"){
+        resp.redirect("/chats?send="+cookie_got.usn+"&recv=none");
+    }
+    else{
+        resp.sendFile(__dirname+"/html_files/login.html");
+    }
 });
+
+app.get("/logout",(req,resp)=>{
+    resp.clearCookie("usn");
+    resp.clearCookie("auth");
+    resp.redirect("/login");
+})
+
 app.get("/reg_user_name",(req,resp)=>{
     resp.sendFile(__dirname+"/html_files/reg_user.html");
 });
@@ -222,34 +248,39 @@ function GetSortOrder(prop) {
     }    
 } 
 app.get("/chats",async (req,resp)=>{
-    let val= await messages_act_model.find({$or: [
-        { $and: [{person1: req.query.send}, {person2: req.query.recv}] },
-        { $and: [{person1: req.query.recv}, {person2: req.query.send}] }
-    ]});
-    let val1=await Contact.find({user_name:req.query.send});
-    if(val.length!==0){
-        val[0].chats.sort(GetSortOrder("date_act"));
-        for(let up=0;up<val[0].chats.length;up++){
-            if(val[0].chats[up].To===req.query.send&&val[0].chats[up].to_seen===0){
-                console.log(req.query.send+" "+val[0].chats[up].To);
-                val[0].chats[up].to_seen=1;
+    if(req.cookies.auth==="y"){
+        let val= await messages_act_model.find({$or: [
+            { $and: [{person1: req.query.send}, {person2: req.query.recv}] },
+            { $and: [{person1: req.query.recv}, {person2: req.query.send}] }
+        ]});
+        let val1=await Contact.find({user_name:req.query.send});
+        if(val.length!==0){
+            val[0].chats.sort(GetSortOrder("date_act"));
+            for(let up=0;up<val[0].chats.length;up++){
+                if(val[0].chats[up].To===req.query.send&&val[0].chats[up].to_seen===0){
+                    console.log(req.query.send+" "+val[0].chats[up].To);
+                    val[0].chats[up].to_seen=1;
+                }
+            }
+            val[0].save();
+            if(val1.length!==0){
+                resp.render("chat_ejs.ejs",{ people:val1[0].user_contacts,selected_user:req.query.recv,messages:val[0].chats,send:req.query.send,recv:req.query.recv});
+            }
+            else{
+                resp.render("chat_ejs.ejs",{ people:[],selected_user:req.query.recv,messages:val[0].chats,send:req.query.send,recv:req.query.recv});
             }
         }
-        val[0].save();
-        if(val1.length!==0){
-            resp.render("chat_ejs.ejs",{ people:val1[0].user_contacts,selected_user:req.query.recv,messages:val[0].chats,send:req.query.send,recv:req.query.recv});
-        }
         else{
-            resp.render("chat_ejs.ejs",{ people:[],selected_user:req.query.recv,messages:val[0].chats,send:req.query.send,recv:req.query.recv});
+            if(val1.length!==0){
+                resp.render("chat_ejs.ejs",{ people:val1[0].user_contacts,selected_user:req.query.recv,messages:[],send:req.query.send,recv:req.query.recv});
+            }
+            else{
+                resp.render("chat_ejs.ejs",{ people:[],selected_user:req.query.recv,messages:[],send:req.query.send,recv:req.query.recv});
+            }
         }
     }
     else{
-        if(val1.length!==0){
-            resp.render("chat_ejs.ejs",{ people:val1[0].user_contacts,selected_user:req.query.recv,messages:[],send:req.query.send,recv:req.query.recv});
-        }
-        else{
-            resp.render("chat_ejs.ejs",{ people:[],selected_user:req.query.recv,messages:[],send:req.query.send,recv:req.query.recv});
-        }
+        resp.redirect("/login");
     }
 })
 
@@ -340,7 +371,8 @@ app.post("/login",async function(req,resp,next){
     }
     else{
         if(req.body.password===val[0].pass){
-            //add cookie
+            resp.cookie("auth","y");
+            resp.cookie("usn",req.body.user_name);
             resp.redirect("/chats?send="+req.body.user_name+"&recv=none");
         }
         else{

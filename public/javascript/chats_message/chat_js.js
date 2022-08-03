@@ -151,3 +151,8 @@ document.getElementById("search_close_btn").addEventListener("click",function(){
 document.getElementById("search_open").addEventListener("click",function(){
     document.getElementById("search_main_").style.display="block";
 },false);
+
+
+document.getElementById("log_out_btn").addEventListener("click",()=>{
+    window.location.replace("https://social-new-ind.herokuapp.com/logout");
+},false);
