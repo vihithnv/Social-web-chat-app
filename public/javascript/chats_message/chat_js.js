@@ -1,4 +1,7 @@
 function post_chat_server(){
+    if(emoj_on===1){
+        document.getElementById("emj_pick").style.display="none";
+    }
     const mess_val=document.getElementById("chat_text").value;
     let send=document.getElementById("send").getAttribute("value");
     let recv=document.getElementById("recv").getAttribute("value");
@@ -25,9 +28,9 @@ function post_chat_server(){
 
 function render_new_messages(objs){
     if(objs.length!==0){
-    let new_head=document.createElement("div");
-    new_head.innerHTML='<br><div class="prof_ ext"><div class="prof_name">- New Message -</div></div>';
-    document.getElementById("chats_cont").appendChild(new_head);
+    // let new_head=document.createElement("div");
+    // new_head.innerHTML='<br><div class="prof_ ext"><div class="prof_name">- New Message -</div></div>';
+    // document.getElementById("chats_cont").appendChild(new_head);
     for(let i=0;i<objs.length;i++){
         let chat_div=document.createElement("div");
         chat_div.innerHTML='<div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;">'+objs[i].time+'</span><br>'+objs[i].text_message+'</div></div>';
@@ -156,3 +159,22 @@ document.getElementById("search_open").addEventListener("click",function(){
 document.getElementById("log_out_btn").addEventListener("click",()=>{
     window.location.replace("https://social-new-ind.herokuapp.com/logout");
 },false);
+
+
+var emoj_on=0;
+document.getElementById("emoji_selec").addEventListener("click",function(){
+    emoj_on=1;
+    let bounds= document.getElementById("chat_text").getBoundingClientRect();
+    document.getElementById("emj_pick").style.left=(bounds.left+15)+"px";
+    document.getElementById("emj_pick").style.setProperty("top","calc("+bounds.top+"px - 45vh");
+    document.getElementById("emj_pick").style.display="inline-block";
+});
+document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+    document.getElementById("chat_text").value+=event.detail["unicode"];
+    console.log(event.detail["unicode"]);   
+});
+document.getElementById("chat_text").addEventListener("keypress",function(){
+    if(emoj_on===1){
+        document.getElementById("emj_pick").style.display="none";
+    }
+});

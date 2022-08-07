@@ -375,3 +375,20 @@ body{
 .added_srch_user{
     background-color: rgb(57, 166, 57);
 }
+
+
+emoji-picker {
+    --num-columns: 4;
+    --background: #ABA9A9;
+    width: 30vw;
+    height: 45vh;
+    border: none;
+    border-radius: 10px;
+}
+
+#emj_pick{
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    column-gap: 5px;
+}

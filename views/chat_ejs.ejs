@@ -30,6 +30,9 @@
                 </div>
             </div>
         </div>
+        <div id="emj_pick">
+            <emoji-picker></emoji-picker>
+        </div>
         <p style="display:none;" id="send" value=<%=send%>></p>
         <p style="display:none;" id="recv" value=<%=recv%>></p>
         <div class="level_1">
@@ -84,12 +87,14 @@
                         
                     </div>
                     <div class="send_box">
+                        <div><img src="icons/chats_icon/🦆 icon _Emoji Add_.svg" class="send_icon" id="emoji_selec"/></div>
                         <div><input type="text" class="message_val" placeholder="Type your message" id="chat_text"/></div>
                         <div><img src="icons/chats_icon/akar-icons_send.svg" class="send_icon" id="send_chat_"/></div>
                     </div>
                 </div>
             </div>
         </div>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
         <script src="javascript/chats_message/chat_js.js" type="text/javascript"></script>
     </body>
 </html>
