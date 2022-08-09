@@ -479,7 +479,6 @@ app.post("/img_post",upload.single("test_img"),async (req,resp)=>{
     resp.redirect("https://social-new-ind.herokuapp.com/");
     fs.unlink(path.join(__dirname + '/public/uploads/' + req.file.filename),(err)=>{
         if(err){
-            console.log("hello");
             console.log(err);
         }
     });
