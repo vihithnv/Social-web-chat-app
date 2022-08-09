@@ -4,11 +4,9 @@ const body_parse=require("body-parser");
 const mongoose=require("mongoose");
 const { response } = require("express");
 const cookie_parser = require('cookie-parser');
-const { resolveInclude } = require("ejs");
-// mongoose.connect("mongodb+srv://vihith_mongodb:"+"Cse3002"+"%40"+"iwp2022"+"@cluster0.u8fjk.mongodb.net/Social_db",{ useNewUrlParser: true});
+// const { resolveInclude } = require("ejs");
+mongoose.connect("mongodb+srv://vihith_mongodb:"+"Cse3002"+"%40"+"iwp2022"+"@cluster0.u8fjk.mongodb.net/Social_db",{ useNewUrlParser: true});
 // app.use('view engine',"ejs");
-
-mongoose.connect("mongodb://localhost:27017/Social_db",{ useNewUrlParser: true});
 
 app.use(cookie_parser());
 app.get("/cookie",(req,resp)=>{
@@ -476,7 +474,7 @@ app.post("/img_post",upload.single("test_img"),async (req,resp)=>{
         chat[0].chats.push(mess_got);
         chat[0].save();
     }
-    resp.send("image_received");
+    resp.redirect("https://social-new-ind.herokuapp.com/");
     fs.unlink(path.join(__dirname + '/public/uploads/' + req.file.filename),(err)=>{
         if(err){
             console.log(err);
