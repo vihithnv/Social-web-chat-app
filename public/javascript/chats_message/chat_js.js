@@ -178,3 +178,15 @@ document.getElementById("chat_text").addEventListener("keypress",function(){
         document.getElementById("emj_pick").style.display="none";
     }
 });
+
+
+document.getElementById("img_up_close_btn").addEventListener("click",()=>{
+    document.getElementById("img_up_min").style.display="none";
+});
+
+document.getElementById("img_up_close_btn").addEventListener("click",()=>{
+    document.getElementById("img_up_min").style.display="none";
+});
+document.getElementById("img_selec").addEventListener("click",()=>{
+    document.getElementById("img_up_min").style.display="block";
+});

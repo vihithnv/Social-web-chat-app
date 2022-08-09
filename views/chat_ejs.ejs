@@ -10,6 +10,25 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     </head>
     <body>
+        <div class="search_main" id="img_up_min">
+            <div class="search_main_container">
+                <div class="img_up_">
+                    <div><button id="img_up_close_btn">Close</button></div>
+                    <div style="font-family: 'Poppins', sans-serif;font-weight: 600;font-size: larger;">Upload</div>
+                    <div><img src="icons/side_bar/Search.svg" class="opt_bar_icon" id="search_person_btn"/></div>
+                </div>
+                <form action="/img_post" method="post"  enctype="multipart/form-data">    
+                    <div class="search_result">
+                        <div class="match_tiles_container">
+                            <div><input type="text" name="send" style="display:none;"  value=<%=send%> /></div>
+                            <div><input type="text" name="recv" style="display:none;" value=<%=recv%> /></div>
+                            <div><input type="file" name="test_img" class="img_file"/></div>
+                            <div><input type="submit" value="Upload image" class="upload_btn"/></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="search_main" id="search_main_">
             <div class="search_main_container">
                 <div class="search_inp">
@@ -65,7 +84,7 @@
                     <div class="fre_container" id="contc_cont">
                         <% for(let i=0; i<people.length; i++) { %>
                             <div class="tile" id= <%=people[i]%>>
-                                <!-- <img src="img1.jpg" class="tile_img" alt="img"/> -->
+                             <!-- <img src="img1.jpg" class="tile_img" alt="img"/> -->
                                 <div style="margin-left: 10px;"><%=people[i]%></div>
                             </div>
                         <% } %>  
@@ -77,16 +96,32 @@
                         <div class="prof_name"><%= selected_user %></div>
                     </div>
                     <div class="chat_message_container" id="chats_cont">
-                        <% for(let i=0; i<messages.length; i++) { %>
+                        <!-- <% for(let i=0; i<messages.length; i++) { %>
                             <% if(messages[i].From=== selected_user){ %>
                                 <div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;"><%=messages[i].time%></span><br><%=messages[i].text_message%></div></div>
                             <% } else{ %>   
                                 <div style="text-align: right;"><div class="chat_recv"><span style="font-size: x-small;"><%=messages[i].time%></span><br><%=messages[i].text_message%></div></div>
                             <% } %>
-                        <% } %>               
+                        <% } %>                -->
+                        <% for(let i=0; i<messages.length; i++) { %>
+                            <% if(messages[i].message_type!=="image"){ %>
+                                <% if(messages[i].From=== selected_user){ %>
+                                    <div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;"><%=messages[i].time%></span><br><%=messages[i].text_message%></div></div>
+                                <% } else{ %>   
+                                    <div style="text-align: right;"><div class="chat_recv"><span style="font-size: x-small;"><%=messages[i].time%></span><br><%=messages[i].text_message%></div></div>
+                                <% } %>
+                            <% } else{ %> 
+                                <% if(messages[i].From=== selected_user){ %>
+                                    <div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;"><%=messages[i].time%></span><br><br><img src="data:image/<%=messages[i].img.contentType%>;base64,<%=messages[i].img.data.toString('base64')%>" class="uploaded_image"></div></div>
+                                <% } else{ %>   
+                                    <div style="text-align: right;"><div class="chat_recv"><span style="font-size: x-small;"><%=messages[i].time%></span><br><br><img src="data:image/<%=messages[i].img.contentType%>;base64,<%=messages[i].img.data.toString('base64')%>" class="uploaded_image"></div></div>
+                                <% } %>
+                            <% } %>
+                        <% } %> 
                         
                     </div>
                     <div class="send_box">
+                        <div><img src="icons/chats_icon/🦆 icon _Image Add_.svg" class="send_icon" id="img_selec"/></div>
                         <div><img src="icons/chats_icon/🦆 icon _Emoji Add_.svg" class="send_icon" id="emoji_selec"/></div>
                         <div><input type="text" class="message_val" placeholder="Type your message" id="chat_text"/></div>
                         <div><img src="icons/chats_icon/akar-icons_send.svg" class="send_icon" id="send_chat_"/></div>

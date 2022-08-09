@@ -1,3 +1,4 @@
-app.get("/signup",(req,resp)=>{
-//     resp.send("sign up page");
-// });
+img:{
+                data: Buffer,
+                contentType: String
+            }

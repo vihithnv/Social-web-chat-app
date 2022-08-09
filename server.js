@@ -8,7 +8,6 @@ const { resolveInclude } = require("ejs");
 mongoose.connect("mongodb+srv://vihith_mongodb:"+"Cse3002"+"%40"+"iwp2022"+"@cluster0.u8fjk.mongodb.net/Social_db",{ useNewUrlParser: true});
 // app.use('view engine',"ejs");
 app.use(cookie_parser());
-
 app.get("/cookie",(req,resp)=>{
     resp.cookie("auth","y");
     resp.cookie("auth","n");
@@ -388,6 +387,11 @@ const messages_act=new mongoose.Schema(
         person1: String,
         person2: String,
         chats:[{
+            img:{
+                data: Buffer,
+                contentType: String
+            },
+            message_type:String,
             To: String,
             From: String,
             text_message: String,
@@ -399,3 +403,80 @@ const messages_act=new mongoose.Schema(
 );
 const messages_act_model=mongoose.model("new_chats_container",messages_act);
 
+
+const multer  = require('multer');
+const fs = require('fs');
+const path = require('path');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+const upload = multer({ storage: storage });
+
+
+
+app.post("/img_post",upload.single("test_img"),async (req,resp)=>{
+    let mess_recv=req.body;
+    let currentTime = new Date();
+    let currentOffset = currentTime.getTimezoneOffset();
+    let ISTOffset = 330;  
+    let ISTTime = new Date(currentTime.getTime() + (ISTOffset + currentOffset)*60000);
+    let hrs = ISTTime.getHours();
+    let min = ISTTime.getMinutes();
+    let a_p = hrs >= 12 ? 'pm' : 'am';
+    hrs = hrs % 12;
+    hrs = hrs ? hrs : 12; 
+    min= min< 10 ? '0'+min : min;
+    let dt_val=hrs+"."+min+" "+a_p;
+    let chat= await messages_act_model.find({$or: [
+        { $and: [{person1: mess_recv.send}, {person2: mess_recv.recv}] },
+        { $and: [{person1: mess_recv.recv}, {person2: mess_recv.send}] }
+    ]});
+    if(chat.length===0){
+        let mess_1=new messages_act_model({
+            person1: mess_recv.send,
+            person2: mess_recv.recv,
+            chats:[{
+                img:{
+                    data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+                    contentType: 'image/png'
+                },
+                message_type:"image",
+                To: mess_recv.recv,
+                From: mess_recv.send,
+                text_message: "",
+                date_act: ISTTime,
+                time: dt_val,
+                to_seen: 0
+            }]
+        });
+        mess_1.save();
+    }
+    else{
+        let mess_got={
+            img:{
+                data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+                contentType: 'image/png'
+            },
+            message_type:"image",
+            To: mess_recv.to,
+            From: mess_recv.from,
+            text_message: mess_recv.text,
+            date_act: ISTTime,
+            time: dt_val,
+            to_seen: 0
+        }
+        chat[0].chats.push(mess_got);
+        chat[0].save();
+    }
+    resp.redirect("https://social-new-ind.herokuapp.com/");
+    fs.unlink(path.join(__dirname + '/uploads/' + req.file.filename),(err)=>{
+        if(err){
+            console.log(err);
+        }
+    });
+});
