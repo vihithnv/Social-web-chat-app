@@ -5,8 +5,11 @@ const mongoose=require("mongoose");
 const { response } = require("express");
 const cookie_parser = require('cookie-parser');
 const { resolveInclude } = require("ejs");
-mongoose.connect("mongodb+srv://vihith_mongodb:"+"Cse3002"+"%40"+"iwp2022"+"@cluster0.u8fjk.mongodb.net/Social_db",{ useNewUrlParser: true});
+// mongoose.connect("mongodb+srv://vihith_mongodb:"+"Cse3002"+"%40"+"iwp2022"+"@cluster0.u8fjk.mongodb.net/Social_db",{ useNewUrlParser: true});
 // app.use('view engine',"ejs");
+
+mongoose.connect("mongodb://localhost:27017/Social_db",{ useNewUrlParser: true});
+
 app.use(cookie_parser());
 app.get("/cookie",(req,resp)=>{
     resp.cookie("auth","y");
@@ -409,7 +412,7 @@ const fs = require('fs');
 const path = require('path');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads')
+        cb(null, 'public/uploads')
     },
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now())
@@ -442,7 +445,7 @@ app.post("/img_post",upload.single("test_img"),async (req,resp)=>{
             person2: mess_recv.recv,
             chats:[{
                 img:{
-                    data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+                    data: fs.readFileSync(path.join(__dirname + '/public/uploads/' + req.file.filename)),
                     contentType: 'image/png'
                 },
                 message_type:"image",
@@ -459,7 +462,7 @@ app.post("/img_post",upload.single("test_img"),async (req,resp)=>{
     else{
         let mess_got={
             img:{
-                data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+                data: fs.readFileSync(path.join(__dirname + '/public/uploads/' + req.file.filename)),
                 contentType: 'image/png'
             },
             message_type:"image",
@@ -474,8 +477,9 @@ app.post("/img_post",upload.single("test_img"),async (req,resp)=>{
         chat[0].save();
     }
     resp.redirect("https://social-new-ind.herokuapp.com/");
-    fs.unlink(path.join(__dirname + '/uploads/' + req.file.filename),(err)=>{
+    fs.unlink(path.join(__dirname + '/public/uploads/' + req.file.filename),(err)=>{
         if(err){
+            console.log("hello");
             console.log(err);
         }
     });
