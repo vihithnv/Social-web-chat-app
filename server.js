@@ -202,7 +202,7 @@ app.post("/buff_messages",async (req,resp)=>{
                     }
                     else{
                         let img_mess={
-                            contentType:arr[arr.length-1].img.contentType,
+                            contentType:arr[i].img.contentType,
                             message_type:"image",
                             time:arr[i].time,
                             data:arr[i].img.data.toString('base64'),
