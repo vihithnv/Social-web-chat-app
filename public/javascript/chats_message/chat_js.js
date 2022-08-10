@@ -39,8 +39,8 @@ function render_new_messages(objs){
         }
         else{
             let chat_div=document.createElement("div");
-            let img_data=""+objs[i].img.data.toString('base64');
-            console.log(img_data);
+            let buff=new Buffer(objs[i].img.data+"");
+            let img_data=buff.toString('base64');
             chat_div.innerHTML='<div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;">'+objs[i].time+'</span><br><br><img src="data:image/'+objs[i].img.contentType+';base64,'+img_data+ ' class="uploaded_image" />'+'</div></div>';
             document.getElementById("chats_cont").appendChild(chat_div);
         }
