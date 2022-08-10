@@ -32,9 +32,16 @@ function render_new_messages(objs){
     // new_head.innerHTML='<br><div class="prof_ ext"><div class="prof_name">- New Message -</div></div>';
     // document.getElementById("chats_cont").appendChild(new_head);
     for(let i=0;i<objs.length;i++){
-        let chat_div=document.createElement("div");
-        chat_div.innerHTML='<div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;">'+objs[i].time+'</span><br>'+objs[i].text_message+'</div></div>';
-        document.getElementById("chats_cont").appendChild(chat_div);
+        if(objs[i].message_type!=="image"){
+            let chat_div=document.createElement("div");
+            chat_div.innerHTML='<div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;">'+objs[i].time+'</span><br>'+objs[i].text_message+'</div></div>';
+            document.getElementById("chats_cont").appendChild(chat_div);
+        }
+        else{
+            let chat_div=document.createElement("div");
+            chat_div.innerHTML='<div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;">'+objs[i].time+'</span><br><br><img src="data:image/'+objs[i].img.contentType+';base64,'+objs[i].img.data.toString('base64')+ 'class="uploaded_image">'+'</div></div>';
+            document.getElementById("chats_cont").appendChild(chat_div);
+        }
     }
     document.getElementById("chats_cont").scrollTop=document.getElementById("chats_cont").scrollHeight;}
 }
