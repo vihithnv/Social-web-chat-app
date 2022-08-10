@@ -39,9 +39,7 @@ function render_new_messages(objs){
         }
         else{
             let chat_div=document.createElement("div");
-            console.log(objs[i])
-            let img_data=objs[i].img.data.toString('base64');
-            chat_div.innerHTML='<div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;">'+objs[i].time+'</span><br><br><img src="data:image/'+objs[i].img.contentType+';base64,'+img_data+ ' class="uploaded_image" />'+'</div></div>';
+            chat_div.innerHTML='<div style="text-align: left;"><div class="chat_send"><span style="font-size: x-small;">'+objs[i].time+'</span><br><br><img src="data:image/'+objs[i].img.contentType+';base64,'+objs[i].data+ ' class="uploaded_image" />'+'</div></div>';
             document.getElementById("chats_cont").appendChild(chat_div);
         }
     }

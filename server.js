@@ -197,9 +197,29 @@ app.post("/buff_messages",async (req,resp)=>{
             if(arr.length!==0){
                 let send_string="";
                 for(let s=0;s<arr.length-1;s++){
-                    send_string+=JSON.stringify(arr[i])+"<brk>";
+                    if(arr[i].message_type!=="image"){
+                        send_string+=JSON.stringify(arr[i])+"<brk>";
+                    }
+                    else{
+                        let img_mess={
+                            message_type:"image",
+                            time:arr[i].time,
+                            data:arr[i].img.data.toString('base64'),
+                        }
+                        send_string+=JSON.stringify(img_mess)+"<brk>";
+                    }
                 }
-                send_string+=JSON.stringify(arr[arr.length-1]);
+                if(arr[arr.length-1].message_type!=="image"){
+                    send_string+=JSON.stringify(arr[arr.length-1]);
+                }
+                else{
+                    let img_mess={
+                        message_type:"image",
+                        time:arr[arr.length-1].time,
+                        data:arr[arr.length-1].img.data.toString('base64'),
+                    }
+                    send_string+=JSON.stringify(img_mess);
+                }
                 messages_fnd[0].save();
                 resp.send(send_string);
             }
