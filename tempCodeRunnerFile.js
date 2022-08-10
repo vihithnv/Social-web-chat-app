@@ -1,4 +1,1 @@
-img:{
-                data: Buffer,
-                contentType: String
-            }
+0"+"iwp2022"+"@cluster0.u8fjk.mongodb.net/Social_db",{ useNewUrlParser: true});

@@ -7,7 +7,6 @@ const cookie_parser = require('cookie-parser');
 // const { resolveInclude } = require("ejs");
 mongoose.connect("mongodb+srv://vihith_mongodb:"+"Cse3002"+"%40"+"iwp2022"+"@cluster0.u8fjk.mongodb.net/Social_db",{ useNewUrlParser: true});
 // app.use('view engine',"ejs");
-
 app.use(cookie_parser());
 app.get("/cookie",(req,resp)=>{
     resp.cookie("auth","y");
@@ -464,8 +463,8 @@ app.post("/img_post",upload.single("test_img"),async (req,resp)=>{
                 contentType: 'image/png'
             },
             message_type:"image",
-            To: mess_recv.to,
-            From: mess_recv.from,
+            To: mess_recv.recv,
+            From: mess_recv.send,
             text_message: mess_recv.text,
             date_act: ISTTime,
             time: dt_val,
