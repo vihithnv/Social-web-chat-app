@@ -194,6 +194,7 @@ body{
     margin-bottom: 10px;
     column-gap: 10px;
     min-height: calc(17% - 10px);
+    overflow-x: scroll;
 }
 .message_val{
     margin-top: 10px;
