@@ -82,27 +82,30 @@ function add_user_to_list(usn){
 function ren_srch_user_rslts(arr){
     let cont=document.getElementById("rslts_cont");
     cont.innerHTML="";
-    if(contacts_arr.includes(arr[i])!=true){
-        for(let i=0;i<arr.length;i++){
+    for(let i=0;i<arr.length;i++){
+        if(contacts_arr.includes(arr[i])!=true){
             let new_tile=document.createElement("div");
             new_tile.classList.add("search_tile");
             new_tile.innerHTML='<div class="img_name"><div style="font-weight: 900;">'+arr[i]+'</div></div><div><button class="search_add_btn" name="'+arr[i]+'"'+'id="s_rslts_tile_add_'+arr[i]+'">Add</button></div>';
             cont.appendChild(new_tile);
         }
-        let s_tls=document.getElementsByClassName("search_add_btn");
-        for(let i=0;i<s_tls.length;i++){
+        else{
+            let new_tile=document.createElement("div");
+            new_tile.classList.add("search_tile");
+            new_tile.innerHTML='<div class="img_name"><div style="font-weight: 900;">'+arr[i]+'</div></div><div><button class="search_add_btn added_srch_user" name="'+arr[i]+'"'+'id="s_rslts_tile_add_'+arr[i]+'">Added</button></div>';
+            cont.appendChild(new_tile);
+            document.getElementById("s_rslts_tile_add_"+arr[i]).disabled="true";
+        }
+    }
+    let s_tls=document.getElementsByClassName("search_add_btn");
+    for(let i=0;i<s_tls.length;i++){
+        if(s_tls.disabled!=true){
             s_tls[i].addEventListener("click",function(){
                 add_user_to_list(s_tls[i].getAttribute("name"));
             },false);
         }
     }
-    else{
-        let new_tile=document.createElement("div");
-        new_tile.classList.add("search_tile");
-        new_tile.innerHTML='<div class="img_name"><div style="font-weight: 900;">'+arr[i]+'</div></div><div><button class="search_add_btn added_srch_user" name="'+arr[i]+'"'+'id="s_rslts_tile_add_'+arr[i]+'">Added</button></div>';
-        cont.appendChild(new_tile);
-        document.getElementById("s_rslts_tile_add_"+arr[i]).disabled="true";
-    }
+    
 }
 
 document.getElementById("search_person_btn").addEventListener("click",get_search_user,false);
