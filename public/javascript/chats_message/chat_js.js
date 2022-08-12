@@ -74,6 +74,14 @@ function add_user_to_list(usn){
             document.getElementById("s_rslts_tile_add_"+usn).classList.add("added_srch_user");
             document.getElementById("s_rslts_tile_add_"+usn).innerHTML="Added";
             document.getElementById("s_rslts_tile_add_"+usn).disabled="true";
+            let new_tile=document.createElement("div");
+            new_tile.classList.add("tile");
+            new_tile.id=usn;
+            new_tile.innerHTML='<div style="margin-left: 10px;">'+usn+'</div>';
+            document.getElementById("contc_cont").appendChild(new_tile);
+            new_tile.addEventListener("click",()=>{
+                window.location="https://social-new-ind.herokuapp.com/chats?send="+document.getElementById("send").getAttribute("value")+"&recv="+usn;
+            },false);
         }
     };
     xhr.send(); 
