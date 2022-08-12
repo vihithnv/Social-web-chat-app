@@ -82,17 +82,26 @@ function add_user_to_list(usn){
 function ren_srch_user_rslts(arr){
     let cont=document.getElementById("rslts_cont");
     cont.innerHTML="";
-    for(let i=0;i<arr.length;i++){
+    if(contacts_arr.includes(arr[i])!=true){
+        for(let i=0;i<arr.length;i++){
+            let new_tile=document.createElement("div");
+            new_tile.classList.add("search_tile");
+            new_tile.innerHTML='<div class="img_name"><div style="font-weight: 900;">'+arr[i]+'</div></div><div><button class="search_add_btn" name="'+arr[i]+'"'+'id="s_rslts_tile_add_'+arr[i]+'">Add</button></div>';
+            cont.appendChild(new_tile);
+        }
+        let s_tls=document.getElementsByClassName("search_add_btn");
+        for(let i=0;i<s_tls.length;i++){
+            s_tls[i].addEventListener("click",function(){
+                add_user_to_list(s_tls[i].getAttribute("name"));
+            },false);
+        }
+    }
+    else{
         let new_tile=document.createElement("div");
         new_tile.classList.add("search_tile");
-        new_tile.innerHTML='<div class="img_name"><div style="font-weight: 900;">'+arr[i]+'</div></div><div><button class="search_add_btn" name="'+arr[i]+'"'+'id="s_rslts_tile_add_'+arr[i]+'">Add</button></div>';
+        new_tile.innerHTML='<div class="img_name"><div style="font-weight: 900;">'+arr[i]+'</div></div><div><button class="search_add_btn added_srch_user" name="'+arr[i]+'"'+'id="s_rslts_tile_add_'+arr[i]+'">Added</button></div>';
         cont.appendChild(new_tile);
-    }
-    let s_tls=document.getElementsByClassName("search_add_btn");
-    for(let i=0;i<s_tls.length;i++){
-        s_tls[i].addEventListener("click",function(){
-            add_user_to_list(s_tls[i].getAttribute("name"));
-        },false);
+        document.getElementById("s_rslts_tile_add_"+arr[i]).disabled="true";
     }
 }
 
@@ -139,6 +148,7 @@ function add_conts_events(){
         },false);
     }
     get_new_mesages();
+    make_contacts_arr();
 }
 
 document.getElementById("send_chat_").addEventListener("click",post_chat_server,false);
@@ -197,3 +207,12 @@ document.getElementById("img_up_close_btn").addEventListener("click",()=>{
 document.getElementById("img_selec").addEventListener("click",()=>{
     document.getElementById("img_up_min").style.display="block";
 });
+
+
+var contacts_arr=[];
+function make_contacts_arr(){
+    let tls=document.getElementsByClassName("tile");
+    for(let i=0;i<tls.length;i++){
+        contacts_arr.push(tls[i].id);
+    }
+}

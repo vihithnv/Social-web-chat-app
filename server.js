@@ -495,7 +495,7 @@ app.post("/img_post",upload.single("test_img"),async (req,resp)=>{
         chat[0].chats.push(mess_got);
         chat[0].save();
     }
-    resp.redirect("https://social-new-ind.herokuapp.com/");
+    resp.redirect("https://social-new-ind.herokuapp.com/chats?send="+mess_recv.send+"&recv="+mess_recv.recv);
     fs.unlink(path.join(__dirname + '/public/uploads/' + req.file.filename),(err)=>{
         if(err){
             console.log("hi");
