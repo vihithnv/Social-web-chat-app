@@ -23,9 +23,9 @@
         <form action="/reg_user_name_pass" method="post">
             <div class="container">
                 <div class="name">Social</div>
-                <div><input name="user_name" type="text" value=<%=usn%>  style="display:none;" /></div>
+                <div><input name="user_name" type="text" value=<%=usn%> required style="display:none;" /></div>
                 <div><input type="text" value=<%=usn%>  disabled class="inp" /></div>
-                <div><input name="password" type="password" placeholder="Enter your Password" required class="inp" /></div>
+                <div><input name="password" pattern=".{8,12}" type="password" placeholder="Enter your Password" required class="inp" /></div>
                 <div><input type="submit" value="Submit" id="s_btn"/></div>
             </div>
         </form>

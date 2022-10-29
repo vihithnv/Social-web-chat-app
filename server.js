@@ -67,17 +67,17 @@ app.post("/reg_user_name_pass",async (req,resp)=>{
     await new_s_u.save();
     resp.redirect("/login");
 });
-app.get("/mainpage",async function(req,resp,next){
-    let val=await message.find();
-    resp.render("main_page.ejs",{
-        sender_preson: val[0].sender,
-        dt: val[0].date,
-        time: val[0].time,
-        text_content: val[0].text_content,
-        like_cnt: val[0].likes_cnt,
-        cmts_cnt: val[0].comments_cnt,
-    });
-});
+// app.get("/mainpage",async function(req,resp,next){
+//     let val=await message.find();
+//     resp.render("main_page.ejs",{
+//         sender_preson: val[0].sender,
+//         dt: val[0].date,
+//         time: val[0].time,
+//         text_content: val[0].text_content,
+//         like_cnt: val[0].likes_cnt,
+//         cmts_cnt: val[0].comments_cnt,
+//     });
+// });
 
 // app.get("/signup",(req,resp)=>{
 //     resp.send("sign up page");
@@ -155,29 +155,29 @@ app.get("/add_friend",async (req,resp)=>{
 
 
 
-const buff_messages=new mongoose.Schema({
-        To: String,
-        From: String,
-        text_message: String,
-        date_act: String,
-        time: String
-});
-const buff_model=mongoose.model("buffer_message",buff_messages);
+// const buff_messages=new mongoose.Schema({
+//         To: String,
+//         From: String,
+//         text_message: String,
+//         date_act: String,
+//         time: String
+// });
+// const buff_model=mongoose.model("buffer_message",buff_messages);
 
 
 
-const chat_message_schema= new mongoose.Schema({
-    person_1:String,
-    person_2:String,
-    chats_box:[{
-        To: String,
-        From: String,
-        text_message: String,
-        date_act: String,
-        time: String
-    }]
-});
-const chat_model=mongoose.model("chat_boxe",chat_message_schema);
+// const chat_message_schema= new mongoose.Schema({
+//     person_1:String,
+//     person_2:String,
+//     chats_box:[{
+//         To: String,
+//         From: String,
+//         text_message: String,
+//         date_act: String,
+//         time: String
+//     }]
+// });
+// const chat_model=mongoose.model("chat_boxe",chat_message_schema);
 app.post("/buff_messages",async (req,resp)=>{
     let mess_recv=req.body;
     if(req.body.send!=="none"&&req.body.recv!=="none"){
