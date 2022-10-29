@@ -40,8 +40,8 @@ body{
     min-height: inherit;
     display: flex;
     align-items: center;
-    justify-content: center;
-    column-gap: 50px;
+    justify-content: flex-end;
+    /* column-gap: 50px; */
 }
 .nav_bar_element{
     cursor: context-menu;
